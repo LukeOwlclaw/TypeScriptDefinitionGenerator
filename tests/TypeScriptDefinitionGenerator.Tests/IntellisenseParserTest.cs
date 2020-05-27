@@ -27,7 +27,7 @@ namespace TypeScriptDefinitionGenerator.Tests
         public void HowToUseCodeModelSpike()
         {
             // get the DTE reference...
-            DTE2 dte2 = (DTE2)System.Runtime.InteropServices.Marshal.GetActiveObject(VisualStudioProgId);
+            DTE2 dte2 = SolutionWorker.GetVisualStudioInstanceOfTypeScriptDefinitionGenerator();
 
             // get the solution
             var worker = new SolutionWorker();
@@ -41,8 +41,8 @@ namespace TypeScriptDefinitionGenerator.Tests
             // Test for testing custom CS code. Just copy code to TestTestClass.cs and run this test. Check output written to tsFile manually.
 
             // get the DTE reference...
-            DTE2 dte2 = (DTE2)System.Runtime.InteropServices.Marshal.GetActiveObject(VisualStudioProgId);
-
+            DTE2 dte2 = SolutionWorker.GetVisualStudioInstanceOfTypeScriptDefinitionGenerator();
+            
             var worker = new SolutionWorker();
             worker.ExamineSolution(dte2.Solution);
 
@@ -83,7 +83,7 @@ namespace TypeScriptDefinitionGenerator.Tests
             //Arrange
 
             // get the DTE reference...
-            DTE2 dte2 = (DTE2)System.Runtime.InteropServices.Marshal.GetActiveObject(VisualStudioProgId);
+            DTE2 dte2 = SolutionWorker.GetVisualStudioInstanceOfTypeScriptDefinitionGenerator();
 
 
             var worker = new SolutionWorker();
@@ -186,7 +186,7 @@ namespace TypeScriptDefinitionGenerator.Tests
             //Arrange
 
             // get the DTE reference...
-            DTE2 dte2 = (DTE2)System.Runtime.InteropServices.Marshal.GetActiveObject(VisualStudioProgId);
+            DTE2 dte2 = SolutionWorker.GetVisualStudioInstanceOfTypeScriptDefinitionGenerator();
 
 
             var worker = new SolutionWorker();
@@ -270,7 +270,7 @@ namespace TypeScriptDefinitionGenerator.Tests
         public void CheckGenerateTypeScriptOutput()
         {
             // get the DTE reference...
-            DTE2 dte2 = (DTE2)System.Runtime.InteropServices.Marshal.GetActiveObject(VisualStudioProgId);
+            DTE2 dte2 = SolutionWorker.GetVisualStudioInstanceOfTypeScriptDefinitionGenerator();
 
             var worker = new SolutionWorker();
             worker.ExamineSolution(dte2.Solution);
