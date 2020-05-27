@@ -39,6 +39,7 @@ namespace TypeScriptDefinitionGenerator
 
             var neededImports = new List<string>();
             var imports = new List<string>();
+            var exports = new List<string>();
 
             foreach (var ns in objects.GroupBy(o => o.Namespace))
             {
@@ -50,11 +51,12 @@ namespace TypeScriptDefinitionGenerator
                 foreach (IntellisenseObject io in ns)
                 {
                     WriteTypeScriptComment(io.Summary, sbBody, prefixModule);
-                    
+
                     if (io.IsEnum)
                     {
                         string type = "enum ";
                         sbBody.Append(prefixModule).Append(export).Append(type).Append(Utility.CamelCaseClassName(io.Name)).Append(" ");
+                        if (!Options.DeclareModule) { exports.Add(Utility.CamelCaseClassName(io.Name)); }
 
                         sbBody.AppendLine("{");
                         WriteTSEnumDefinition(sbBody, prefixModule + "\t", io.Properties);
@@ -64,6 +66,7 @@ namespace TypeScriptDefinitionGenerator
                     {
                         string type = Options.ClassInsteadOfInterface ? "class " : "interface ";
                         sbBody.Append(prefixModule).Append(export).Append(type).Append(Utility.CamelCaseClassName(io.Name)).Append(" ");
+                        if (!Options.DeclareModule) { exports.Add(Utility.CamelCaseClassName(io.Name)); }
 
                         string[] summaryLines = io.Summary?.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
                         string optionsLine = summaryLines?.SingleOrDefault(l => l.StartsWith("TypeScriptDefinitionGenerator:"));
@@ -152,7 +155,7 @@ namespace TypeScriptDefinitionGenerator
                 }
                 }
 
-                var notImportedNeededImports = neededImports.Except(imports).ToList();
+                var notImportedNeededImports = neededImports.Except(imports).Except(exports).ToList();
                 if (notImportedNeededImports.Any())
                 {
                     var warningMessage =
