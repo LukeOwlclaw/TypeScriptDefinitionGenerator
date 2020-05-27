@@ -49,6 +49,8 @@ namespace TypeScriptDefinitionGenerator.Tests
 
             ProjectItem item = worker.GetProjectItem(dte2.Solution, "Class1.cs");
 
+            if (item == null) { throw new System.ArgumentNullException(nameof(item), "Class1.cs not found in solution. Close all other instances of Visual Studio!"); }
+
             //Act
             Options.SetOptionsOverrides(new OptionsOverride()
             {

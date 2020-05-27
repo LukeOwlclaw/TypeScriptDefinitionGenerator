@@ -51,7 +51,7 @@ namespace TypeScriptDefinitionGenerator.Tests
                         }
                     }
                 }
-                
+
                 // find this file and examine it
                 if (item.Name == filename)
                 {
@@ -64,16 +64,38 @@ namespace TypeScriptDefinitionGenerator.Tests
 
         public void ExamineSolution(Solution solution)
         {
-            Console.WriteLine(solution.FullName +" ("+ solution.Projects.Count+")");
+            int retryCount = 5;
+            do
+            {
+                try
+                {
+                    ExamineSolutionInternal(solution);
+                    retryCount = 0;
+                }
+                catch (System.Runtime.InteropServices.COMException ex) when ((uint)ex.HResult == 0x8001010A)
+                {
+                    //System.Runtime.InteropServices.COMException: 'The message filter indicated that the application is busy. (Exception from HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))'
+                    retryCount--;
+                    if (retryCount == 0) { throw new InvalidOperationException("ExamineSolution failed"); }
+                    System.Threading.Thread.Sleep(1000);
+                }
+                catch (Exception ex) {
+                    throw new Exception("wrap", ex);
+                }
+            } while (retryCount > 0);
+        }
+        private void ExamineSolutionInternal(Solution solution)
+        {
+            Console.WriteLine(solution.FullName + " (" + solution.Projects.Count + ")");
 
             // get all the projects
             foreach (Project project in solution.Projects)
             {
-                Console.WriteLine("\t{1}:{2}:{3}:{4}:{5}::::{0}", project.FullName, 
-                    project.Kind, 
-                    project.CodeModel, 
-                    "", 
-                    project.Name, 
+                Console.WriteLine("\t{1}:{2}:{3}:{4}:{5}::::{0}", project.FullName,
+                    project.Kind,
+                    project.CodeModel,
+                    "",
+                    project.Name,
                     project.ProjectItems.Count);
 
                 // get all the items in each project

@@ -80,7 +80,26 @@ namespace TypeScriptDefinitionGenerator
             return new HashSet<IntellisenseObject>(list);
         }
 
-        private static void ProcessElement(CodeElement element, List<IntellisenseObject> list, HashSet<CodeClass> underProcess)
+        private static void ProcessElement(CodeElement element, List<IntellisenseObject> list, HashSet<CodeClass> underProcess) {
+            int retryCount = 5;
+            do
+            {
+                try
+                {
+                    ProcessElementInternal(element, list, underProcess);
+                    retryCount = 0;
+                }
+                catch (System.Runtime.InteropServices.COMException ex) when ((uint)ex.HResult == 0x8001010A)
+                {
+                    //System.Runtime.InteropServices.COMException: 'The message filter indicated that the application is busy. (Exception from HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))'
+                    retryCount--;
+                    System.Threading.Thread.Sleep(300);
+                    if (retryCount == 0) { throw new InvalidOperationException("ProcessElement failed"); }
+                }
+            } while (retryCount > 0);
+        }
+
+        private static void ProcessElementInternal(CodeElement element, List<IntellisenseObject> list, HashSet<CodeClass> underProcess)
         {
             if (element.Kind == vsCMElement.vsCMElementEnum)
             {
