@@ -36,6 +36,48 @@ namespace TypeScriptDefinitionGenerator.Tests
 
         [Test]
         [Explicit("Can't be run on build server, some problems on build server")]
+        public void _TestTest()
+        {
+            // Test for testing custom CS code. Just copy code to TestTestClass.cs and run this test. Check output written to tsFile manually.
+
+            // get the DTE reference...
+            DTE2 dte2 = (DTE2)System.Runtime.InteropServices.Marshal.GetActiveObject(VisualStudioProgId);
+
+            var worker = new SolutionWorker();
+            worker.ExamineSolution(dte2.Solution);
+
+            ProjectItem item = worker.GetProjectItem(dte2.Solution, "TestTestClass.cs");
+
+            if (item == null) { throw new System.ArgumentNullException(nameof(item), "TestTestClass.cs not found in solution. Close all other instances of Visual Studio!"); }
+
+            // My default settings
+            Options.SetOptionsOverrides(new OptionsOverride()
+            {
+                CamelCaseEnumerationValues = false,
+                CamelCasePropertyNames = false,
+                CamelCaseTypeNames = false,
+                WebEssentials2015 = false,
+                AddAmdModuleName = true,
+                ClassInsteadOfInterface = false,
+                DeclareModule = false,
+                DefaultModuleName = "module",
+                EOLType = EOLType.CRLF,
+                IgnoreIntellisense = false,
+                IndentTab = false,
+                IndentTabSize = 4,
+                UseNamespace = false,
+            }) ;
+            var list = IntellisenseParser.ProcessFile(item).ToList();
+            var sourceItemPath = item.Properties.Item("FullPath").Value as string;
+            var tsFile = IntellisenseWriter.WriteTypeScript(list, sourceItemPath);
+
+#if DEBUG
+    System.Diagnostics.Debugger.Break();
+#endif
+        }
+
+        [Test]
+        [Explicit("Can't be run on build server, some problems on build server")]
         public void _ShouldWorkProperly()
         {
             //Arrange
