@@ -3,6 +3,8 @@
 ## NOTE: This is a customed redistribute
 The orginal repo wrote by @madskristensen, @snys98, and @denis-peshkov **best regards to them**!
 
+[Installation file (version 2.2.5.0)](https://raw.githubusercontent.com/LukeOwlclaw/TypeScriptDefinitionGenerator/master/TypeScriptDefinitionGenerator-2.2.5.0.vsix)
+
 ---------------------------------------
 
 Creates and synchronizes TypeScript Definition files (d.ts) from C# model classes(DTO) to build strongly typed web application where the server and client-side models are in sync. Works on all .NET project types
