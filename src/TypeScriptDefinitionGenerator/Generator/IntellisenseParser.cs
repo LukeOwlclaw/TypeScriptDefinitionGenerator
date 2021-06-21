@@ -220,7 +220,7 @@ namespace TypeScriptDefinitionGenerator
                    select new IntellisenseProperty
                    {
                        Name = GetName(p),
-                       Type = GetType(p.Parent, p.Type, traversedTypes, references),
+                       Type = GetType(p, traversedTypes, references),
                        Summary = GetSummary(p)
                    };
         }
@@ -298,8 +298,10 @@ namespace TypeScriptDefinitionGenerator
                 : cc.Namespace.FullName;
         }
 
-        private static IntellisenseType GetType(CodeClass rootElement, CodeTypeRef codeTypeRef, HashSet<string> traversedTypes, HashSet<string> references)
+        private static IntellisenseType GetType(CodeProperty codeProperty,  HashSet<string> traversedTypes, HashSet<string> references)
         {
+            CodeClass rootElement = codeProperty.Parent;
+            CodeTypeRef codeTypeRef = codeProperty.Type;
             var isArray = codeTypeRef.TypeKind == vsCMTypeRef.vsCMTypeRefArray;
             var isCollection = codeTypeRef.AsString.StartsWith("System.Collections", StringComparison.Ordinal);
             var isDictionary = false;
@@ -331,6 +333,19 @@ namespace TypeScriptDefinitionGenerator
                     IsDictionary = isDictionary,
                     CodeName = effectiveTypeRef.AsString
                 };
+
+                if (!result.IsOptional) {
+                    // Optional detection does not work for string? (and maybe other types?) We just do not get the ? in CodeName.
+                    try
+                    {
+                        var codeLine = codeProperty.StartPoint.CreateEditPoint().GetText(codeProperty.EndPoint);
+                        if (codeLine.Contains($" {result.CodeName}? "))
+                        {
+                            result.CodeName += "?";
+                        }
+                    }
+                    catch (COMException) { }
+                }
 
                 //VSHelpers.WriteOnBuildDebugWindow($"#{result.CodeName}#{result.TypeScriptName}#{effectiveTypeRef.AsString}#{effectiveTypeRef.AsFullName}#{effectiveTypeRef.CodeType}");
                 //VSHelpers.WriteOnBuildDebugWindow($"##{effectiveTypeRef.TypeKind}##{vsCMTypeRef.vsCMTypeRefCodeType}##{effectiveTypeRef.CodeType.InfoLocation}##{vsCMInfoLocation.vsCMInfoLocationProject}");
