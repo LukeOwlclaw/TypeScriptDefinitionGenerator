@@ -3,7 +3,7 @@
 ## NOTE: This is a customed redistribute
 The orginal repo wrote by @madskristensen, @snys98, and @denis-peshkov **best regards to them**!
 
-[Installation file (version 2.2.5.0)](https://raw.githubusercontent.com/LukeOwlclaw/TypeScriptDefinitionGenerator/master/TypeScriptDefinitionGenerator-2.2.5.0.vsix)
+[Installation file (version 2.2.6.0)](https://raw.githubusercontent.com/LukeOwlclaw/TypeScriptDefinitionGenerator/master/TypeScriptDefinitionGenerator-2.2.6.0.vsix)
 
 ---------------------------------------
 
