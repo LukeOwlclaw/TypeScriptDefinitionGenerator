@@ -339,7 +339,7 @@ namespace TypeScriptDefinitionGenerator
                     try
                     {
                         var codeLine = codeProperty.StartPoint.CreateEditPoint().GetText(codeProperty.EndPoint);
-                        if (codeLine.Contains($" {result.CodeName}? "))
+                        if (codeLine.Contains("? "))
                         {
                             result.CodeName += "?";
                         }
