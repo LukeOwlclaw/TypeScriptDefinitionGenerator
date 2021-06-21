@@ -67,6 +67,8 @@ namespace TypeScriptDefinitionGenerator
                 case "system.datetimeoffset":
                     return "Date";
 
+                case "uri":
+                case "system.uri":
                 case "guid":
                 case "system.guid":
                 case "string":
